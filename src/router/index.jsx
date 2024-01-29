@@ -1,5 +1,5 @@
 import Month from "@/pages/Month";
-import News from "@/pages/News";
+import News from "@/pages/New";
 import Year from "@/pages/Year";
 import Layout from "@/pages/layout";
 import { createBrowserRouter } from "react-router-dom";
