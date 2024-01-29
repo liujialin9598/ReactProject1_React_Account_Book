@@ -1,15 +1,28 @@
 import { DatePicker, NavBar, Toast } from "antd-mobile";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import "./index.scss";
 import classNames from "classnames";
 import dayjs from "dayjs";
+import { useSelector } from "react-redux";
+import _ from "lodash";
 
 export default function Month() {
+  //对数据按月分组 Group data by month
+  const { billList } = useSelector((state) => state.billStore);
+  const groupBill = useMemo(() => {
+    return _.groupBy(billList, (item) => dayjs(item.date).format("YYYY-MM"));
+  }, [billList]);
+  console.log(groupBill);
+
+  //控制datepicker的显示 control the display of datepicker
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  //设置时间 set time
   const [currentDate, setCurrentDate] = useState(() => {
     console.log(dayjs());
-    return dayjs()
+    return dayjs();
   });
+
   return (
     <div className="monthlyBill">
       <NavBar className="nav" backArrow={false}>
@@ -21,6 +34,8 @@ export default function Month() {
           {/* 时间切换区域 date change area */}
           <div className="date">
             <span className="text">
+              {/* 使用dayjs 设置时间格式 */}
+              {/* set time format by dayjs */}
               {dayjs(currentDate).format("YYYY | M")}月账单
             </span>
             <span
