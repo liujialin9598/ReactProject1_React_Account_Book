@@ -4,24 +4,38 @@ import "./index.scss";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
-import _ from "lodash";
+import _, { sum } from "lodash";
 
 export default function Month() {
   //对数据按月分组 Group data by month
   const { billList } = useSelector((state) => state.billStore);
   const groupBill = useMemo(() => {
-    return _.groupBy(billList, (item) => dayjs(item.date).format("YYYY-MM"));
+    return _.groupBy(billList, (item) => dayjs(item.date).format("YYYY-M"));
   }, [billList]);
-  console.log(groupBill);
 
   //控制datepicker的显示 control the display of datepicker
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   //设置时间 set time
   const [currentDate, setCurrentDate] = useState(() => {
-    console.log(dayjs());
     return dayjs();
   });
+
+  const onComfirm = (val) => {
+    setCurrentDate(val);
+  };
+  
+  //筛选时间对应的账单 filter bills for selected time
+  const timeStr = dayjs(currentDate).format("YYYY-M");
+  const monthlyBill = groupBill[timeStr];
+  const sumPay = monthlyBill
+    .filter((item) => item.type === "pay")
+    .reduce((a, b) => {
+      return a + b.money;
+    }, 0);
+  const sumIncome = monthlyBill
+    .filter((item) => item.type === "income")
+    .reduce((a, b) => a + b.money, 0);
 
   return (
     <div className="monthlyBill">
@@ -46,17 +60,17 @@ export default function Month() {
           {/* 统计区域 statistic area */}
           <div className="twoLineOverview">
             <div className="item">
-              <span className="money">{100}</span>
+              <span className="money">{sumPay}</span>
               <span className="type">支出</span>
             </div>
 
             <div className="item">
-              <span className="money">{200}</span>
+              <span className="money">{sumIncome}</span>
               <span className="type">收入</span>
             </div>
 
             <div className="item">
-              <span className="money">{200}</span>
+              <span className="money">{sumPay + sumIncome}</span>
               <span className="type">结余</span>
             </div>
 
@@ -70,10 +84,7 @@ export default function Month() {
               onClose={() => {
                 setShowDatePicker(false);
               }}
-              onConfirm={(val) => {
-                setCurrentDate(val);
-                console.log(currentDate);
-              }}
+              onConfirm={onComfirm}
             />
           </div>
         </div>
