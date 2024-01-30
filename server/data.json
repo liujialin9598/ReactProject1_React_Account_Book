@@ -125,6 +125,48 @@
       "type": "pay",
       "money": 0,
       "useFor": "dessert"
+    },
+    {
+      "id": "c974",
+      "date": "2024-01-30T06:52:50.001Z",
+      "type": "pay",
+      "money": 0,
+      "useFor": ""
+    },
+    {
+      "id": "f3ef",
+      "date": "2024-01-30T06:52:54.131Z",
+      "type": "pay",
+      "money": -132,
+      "useFor": "drinks"
+    },
+    {
+      "id": "ee55",
+      "date": "2024-01-30T06:53:11.676Z",
+      "type": "pay",
+      "money": -123,
+      "useFor": "longdistance"
+    },
+    {
+      "id": "edfb",
+      "date": "2024-01-30T07:02:00.368Z",
+      "type": "pay",
+      "money": 0,
+      "useFor": ""
+    },
+    {
+      "id": "d71d",
+      "date": "2022-03-22T16:00:00.000Z",
+      "type": "pay",
+      "money": -123,
+      "useFor": ""
+    },
+    {
+      "id": "5a69",
+      "date": "2022-01-22T16:00:00.000Z",
+      "type": "pay",
+      "money": -312312,
+      "useFor": "dessert"
     }
   ]
 }

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { pushBillList } from "@/store/modules/billStore";
 import { useDispatch } from "react-redux";
+import dayjs from "dayjs";
 
 const New = () => {
   const navigate = useNavigate();
@@ -27,12 +28,19 @@ const New = () => {
       setShowButton(false);
     }, 1000);
     const data = {
-      date: new Date(),
+      date: date,
       type: activeTag,
       money: activeTag === "income" ? newBill : -newBill,
       useFor: useFor,
     };
     dispatch(pushBillList(data));
+  };
+
+  const [date, setDatep] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const DatePick = (value) => {
+    setDatep(value);
+    setShowDatePicker(false);
   };
 
   const IconClick = (type) => {
@@ -68,13 +76,15 @@ const New = () => {
 
         <div className="kaFormWrapper">
           <div className="kaForm">
-            <div className="date">
+            <div className="date" onClick={() => setShowDatePicker(true)}>
               <Icon type="calendar" className="icon" />
-              <span className="text">{"今天"}</span>
+              <span className="text">{dayjs(date).format("MM-DD")}</span>
               <DatePicker
                 className="kaDate"
                 title="记账日期"
                 max={new Date()}
+                visible={showDatePicker}
+                onConfirm={DatePick}
               />
             </div>
             <div className="kaInput">
@@ -100,7 +110,10 @@ const New = () => {
                 {item.list.map((item) => {
                   return (
                     <div
-                      className={classNames("item", "")}
+                      className={classNames(
+                        "item",
+                        useFor == item.type && showButton && "selected"
+                      )}
                       key={item.type}
                       onClick={() => IconClick(item.type)}
                     >
