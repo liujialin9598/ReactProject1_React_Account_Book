@@ -1,14 +1,16 @@
-import { DatePicker, NavBar, Toast } from "antd-mobile";
+import { DatePicker, NavBar } from "antd-mobile";
 import React, { useMemo, useState } from "react";
 import "./index.scss";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
-import _, { sum } from "lodash";
+import _ from "lodash";
+import DayBill from "./components/DayBill";
 
 export default function Month() {
   //对数据按月分组 Group data by month
   const { billList } = useSelector((state) => state.billStore);
+
   const groupBill = useMemo(() => {
     return _.groupBy(billList, (item) => dayjs(item.date).format("YYYY-M"));
   }, [billList]);
@@ -24,10 +26,10 @@ export default function Month() {
   const onComfirm = (val) => {
     setCurrentDate(val);
   };
-  
-  //筛选时间对应的账单 filter bills for selected time
+
+  //筛选时间对应的账单 filter bills by selected time
   const timeStr = dayjs(currentDate).format("YYYY-M");
-  const monthlyBill = groupBill[timeStr];
+  const monthlyBill = groupBill[timeStr] ? groupBill[timeStr] : [];
   const sumPay = monthlyBill
     .filter((item) => item.type === "pay")
     .reduce((a, b) => {
@@ -36,6 +38,14 @@ export default function Month() {
   const sumIncome = monthlyBill
     .filter((item) => item.type === "income")
     .reduce((a, b) => a + b.money, 0);
+
+  // 当前月按照日来分组
+  const groupBillDaily = useMemo(() => {
+    return _.groupBy(monthlyBill, (item) =>
+      dayjs(item.date).format("YYYY-MM-DD")
+    );
+  }, [monthlyBill]);
+  const days=Object.keys(groupBillDaily)
 
   return (
     <div className="monthlyBill">
@@ -88,6 +98,12 @@ export default function Month() {
             />
           </div>
         </div>
+        {/* 单日列表统计 daily statistic bill*/}
+        {days.length > 0 &&
+          days.map((key) => {
+            console.log(groupBillDaily[key]);
+            return <DayBill groupBillDaily={groupBillDaily[key]} key={key}/>;
+          })}
       </div>
     </div>
   );

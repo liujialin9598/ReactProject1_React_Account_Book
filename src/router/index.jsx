@@ -10,7 +10,7 @@ export default createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: "month",
+        index: "month",
         element: <Month />,
       },
       {
